@@ -55,4 +55,13 @@ public class Customer extends AbstractEntity {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Customer(String phoneNumber, String name, String identityCode, String password) {
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.identityCode = identityCode;
+        this.password = password;
+    }
+
+    public Customer(){}
 }
