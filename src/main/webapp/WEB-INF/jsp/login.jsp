@@ -45,7 +45,7 @@
         <p class="login-box-msg">${message}</p>
         <form action="/login" method="post">
             <div class="form-group has-feedback">
-                <input type="tel" class="form-control" placeholder="请输入手机号" name="phoneNumber">
+                <input type="tel" class="form-control" placeholder="请输入手机号" name="phoneNumber" value="${phoneNumberSession}">
                 <span class="glyphicon glyphicon-phone form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">

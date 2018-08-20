@@ -49,11 +49,11 @@
                 <span class="glyphicon glyphicon-phone form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="text" class="form-control" placeholder="请输入用户名" name="name">
+                <input type="text" class="form-control" placeholder="请输入用户名" name="name" value="${nameSession}">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
-                <input type="text" class="form-control" placeholder="请输入身份证号码" name="identityCode">
+                <input type="text" class="form-control" placeholder="请输入身份证号码" name="identityCode" value="${identityCodeSession}">
                 <span class="glyphicon glyphicon-credit-card form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
