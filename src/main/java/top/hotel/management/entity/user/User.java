@@ -1,14 +1,19 @@
-package top.hotel.management.entity.security;
+package top.hotel.management.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import top.hotel.management.entity.base.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "customer")
-public class Customer extends AbstractEntity {
+@Table(name = "user")
+public class User extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,6 +28,11 @@ public class Customer extends AbstractEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_rel_role",joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Role> roleList = new ArrayList<>();
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -56,12 +66,20 @@ public class Customer extends AbstractEntity {
         this.password = password;
     }
 
-    public Customer(String phoneNumber, String name, String identityCode, String password) {
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
+    public User(String phoneNumber, String name, String identityCode, String password) {
         this.phoneNumber = phoneNumber;
         this.name = name;
         this.identityCode = identityCode;
         this.password = password;
     }
 
-    public Customer(){}
+    public User(){}
 }

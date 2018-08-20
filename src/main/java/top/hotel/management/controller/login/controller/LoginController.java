@@ -1,12 +1,17 @@
 package top.hotel.management.controller.login.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import top.hotel.management.common.enums.PromptMessageEnum;
 import top.hotel.management.common.utils.MD5Util;
-import top.hotel.management.entity.security.Customer;
+import top.hotel.management.entity.user.User;
 import top.hotel.management.service.security.UserService;
 
 @Controller
@@ -23,13 +28,16 @@ public class LoginController {
     @RequestMapping("/login")
     public String login(Model model, @RequestParam String phoneNumber,
                         @RequestParam String password){
-        if (userService.loginCheck(phoneNumber,password)) {
-            return "index";
-        }else {
-            model.addAttribute("message","手机号或密码错误");
+        Subject currentUser = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phoneNumber,password);
+        try {
+            currentUser.login(usernamePasswordToken);
+        }catch (AuthenticationException e){
+            model.addAttribute("message",PromptMessageEnum.PPE.getValue());
+            model.addAttribute("phoneNumberSession",phoneNumber);
             return "login";
         }
-
+        return "index";
     }
 
     @RequestMapping("/toRegister")
@@ -43,12 +51,14 @@ public class LoginController {
                            @RequestParam String name,
                            @RequestParam String identityCode){
         String dateBasePassword = MD5Util.encode(password);
-        Customer customer = new Customer(phoneNumber,name,identityCode,dateBasePassword);
+        User user = new User(phoneNumber,name,identityCode,dateBasePassword);
         if (userService.duplicateCheck(phoneNumber)) {
-            model.addAttribute("message","手机号已注册");
+            model.addAttribute("message", PromptMessageEnum.PD.getValue());
+            model.addAttribute("nameSession",name);
+            model.addAttribute("identityCodeSession",identityCode);
             return "register";
         }else {
-            userService.createNewUser(customer);
+            userService.createNewUser(user);
             return "login";
         }
     }
