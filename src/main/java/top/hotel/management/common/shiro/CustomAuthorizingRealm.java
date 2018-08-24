@@ -35,7 +35,7 @@ public class CustomAuthorizingRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         String phoneNumber = (String) principalCollection.getPrimaryPrincipal();
         User currentUser = userService.getCurrentUser(phoneNumber);
-        List<Menu> menuList = menuService.getMenuTreeFromUser(currentUser);
+        List<Menu> menuList = menuService.findMenuTreeFromUser(currentUser);
         for (Menu menu:menuList){
             if (StringUtils.isNotEmpty(menu.getPermission())){
                 authorizationInfo.addStringPermission(menu.getPermission());

@@ -180,25 +180,36 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Data Table With Full Features</h3>
+                        <div class="box-header with-border">
+                            <h3 class="box-title">住房信息</h3>
+
+                            <div class="box-tools">
+                                <ul class="pagination pagination-sm no-margin pull-right">
+                                    页面大小
+                                    <select name="pageSize" >
+                                        <option value="10" <c:if test="${page.pageSize eq 10}">selected="selected"</c:if>>10</option>
+                                        <option value="20" <c:if test="${page.pageSize eq 20}">selected="selected"</c:if>>20</option>
+                                        <option value="50" <c:if test="${page.pageSize eq 50}">selected="selected"</c:if>>50</option>
+                                    </select>
+                                    条记录
+                                </ul>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example1" class="table table-bordered table-hover">
+                            <table class="table table-bordered table-hover" style="text-align: center">
                                 <thead>
                                 <tr>
-                                    <th>房间号</th>
-                                    <th>房间类型</th>
-                                    <th>房间价格</th>
-                                    <th>房间状态</th>
-                                    <th>入住人</th>
-                                    <th>入住时间</th>
-                                    <th>退房时间</th>
+                                    <th width="15%" style="text-align: center">房间号</th>
+                                    <th width="15%" style="text-align: center">房间类型</th>
+                                    <th width="15%" style="text-align: center">房间价格</th>
+                                    <th width="15%" style="text-align: center">房间状态</th>
+                                    <th width="15%" style="text-align: center">入住者</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${rooms}" var="room">
+                                <c:forEach items="${page.content}" var="room">
                                     <tr>
                                         <td>${room.roomNumber}</td>
                                         <td>
@@ -216,26 +227,38 @@
                                                 </c:if>
                                             </c:forEach>
                                         </td>
-                                        <td>${room.tenant}</td>
-                                        <td><fmt:formatDate value="${room.checkInTime}" pattern="yyyy-MM-dd"/></td>
-                                        <td><fmt:formatDate value="${room.checkOutTime}" pattern="yyyy-MM-dd"/></td>
+                                        <td>
+                                                <c:if test="${ empty room.tenant}">
+                                                    N/A
+                                                </c:if>
+                                                ${room.tenant}
+                                        </td>
+                                        <td></td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <th>房间号</th>
-                                    <th>房间类型</th>
-                                    <th>房间价格</th>
-                                    <th>房间状态</th>
-                                    <th>入住人</th>
-                                    <th>入住时间</th>
-                                    <th>退房时间</th>
+                                    <th width="15%" style="text-align: center">房间号</th>
+                                    <th width="15%" style="text-align: center">房间类型</th>
+                                    <th width="15%" style="text-align: center">房间价格</th>
+                                    <th width="15%" style="text-align: center">房间状态</th>
+                                    <th width="15%" style="text-align: center">入住者</th>
+                                    <th></th>
                                 </tr>
                                 </tfoot>
                             </table>
                         </div>
                         <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li <c:if test="${page.pageNumber eq 0}">class="disabled" </c:if>><a href="#" ><i class="fa fa-angle-double-left" ></i></a></li>
+                                <li <c:if test="${page.pageNumber eq 0}">class="disabled" </c:if>><a href="#"><i class="fa fa-angle-left" ></i></a></li>
+                                <li class="active"><span>${page.pageNumber+1}&nbsp;of &nbsp;${page.totalPages} </span></li>
+                                <li <c:if test="${page.pageNumber eq page.totalPages-1}">class="disabled" </c:if>><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                                <li <c:if test="${page.pageNumber eq page.totalPages-1}">class="disabled" </c:if>><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
+                            </ul>
+                        </div>
                     </div>
                     <!-- /.box -->
                 </div>

@@ -27,7 +27,7 @@ public class MenuService {
             }
         }
         if (roleIdList.size() > 0) {
-            List<Menu> menuList = menuRepository.findMenusByRoleId(roleIdList);
+            List<Menu> menuList = menuRepository.findMenusByRoleIdIn(roleIdList);
             Collections.sort(menuList);
             return menuList;
         }

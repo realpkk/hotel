@@ -1,10 +1,15 @@
 package top.hotel.management.entity.server;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import top.hotel.management.entity.base.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "record")
@@ -19,16 +24,37 @@ public class Record extends AbstractEntity {
     private String recordOwner;
 
     @Column(nullable = false)
-    private String roomNumber;
-
+    private String identityCode;
     /**
      * 1 未支付  2 已支付  3  已退订
      */
     @Column(nullable = false)
-    private String recordStatus;
+    private Integer recordStatus;
 
     @Column(nullable = false)
     private Integer recordPrice;
+
+    @JsonIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date checkInTime;
+
+    @JsonIgnore
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date checkOutTime;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "room_rel_record",joinColumns = {@JoinColumn(name = "record_id")},inverseJoinColumns = {@JoinColumn(name = "room_id")})
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Room> roomList;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "record_rel_detail",joinColumns = {@JoinColumn(name = "record_id")},inverseJoinColumns = {@JoinColumn(name = "detail_id")})
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Detail> detailList;
 
     public String getRecordCode() {
         return recordCode;
@@ -46,19 +72,19 @@ public class Record extends AbstractEntity {
         this.recordOwner = recordOwner;
     }
 
-    public String getRoomNumber() {
-        return roomNumber;
+    public String getIdentityCode() {
+        return identityCode;
     }
 
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
+    public void setIdentityCode(String identityCode) {
+        this.identityCode = identityCode;
     }
 
-    public String getRecordStatus() {
+    public Integer getRecordStatus() {
         return recordStatus;
     }
 
-    public void setRecordStatus(String recordStatus) {
+    public void setRecordStatus(Integer recordStatus) {
         this.recordStatus = recordStatus;
     }
 
@@ -69,4 +95,48 @@ public class Record extends AbstractEntity {
     public void setRecordPrice(Integer recordPrice) {
         this.recordPrice = recordPrice;
     }
+
+    public List<Room> getRoomList() {
+        return roomList;
+    }
+
+    public void setRoomList(List<Room> roomList) {
+        this.roomList = roomList;
+    }
+
+    public Date getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(Date checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public Date getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(Date checkOutTime) {
+        this.checkOutTime = checkOutTime;
+    }
+
+    public List<Detail> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<Detail> detailList) {
+        this.detailList = detailList;
+    }
+
+    public Record(String recordCode, String recordOwner, Integer recordPrice, Date checkInTime, Date checkOutTime, List<Room> roomList) {
+        this.recordCode = recordCode;
+        this.recordOwner = recordOwner;
+        this.recordStatus = 1;
+        this.recordPrice = recordPrice;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
+        this.roomList = roomList;
+    }
+
+    public Record(){}
 }

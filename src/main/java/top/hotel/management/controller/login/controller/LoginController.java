@@ -10,15 +10,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import top.hotel.management.common.enums.PromptMessageEnum;
+import top.hotel.management.common.enums.UserTypeEnum;
+import top.hotel.management.common.utils.DateUtil;
 import top.hotel.management.common.utils.MD5Util;
 import top.hotel.management.entity.user.User;
 import top.hotel.management.service.security.UserService;
+import top.hotel.management.service.server.RoomService;
+
+import java.util.Date;
 
 @Controller
 public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoomService roomService;
 
     @RequestMapping("toLogin")
     public String toLogin(){
@@ -33,11 +41,13 @@ public class LoginController {
         try {
             currentUser.login(usernamePasswordToken);
         }catch (AuthenticationException e){
-            model.addAttribute("message",PromptMessageEnum.PPE.getValue());
+            model.addAttribute("message",PromptMessageEnum.PHONE_PASSWORD_ERROR.getValue());
             model.addAttribute("phoneNumberSession",phoneNumber);
             return "login";
         }
-        return "index";
+        model.addAttribute("user",userService.getCurrentUser(phoneNumber));
+        model.addAttribute("userTypeEnum", UserTypeEnum.values());
+        return "homepage";
     }
 
     @RequestMapping("/toRegister")
@@ -53,7 +63,7 @@ public class LoginController {
         String dateBasePassword = MD5Util.encode(password);
         User user = new User(phoneNumber,name,identityCode,dateBasePassword);
         if (userService.duplicateCheck(phoneNumber)) {
-            model.addAttribute("message", PromptMessageEnum.PD.getValue());
+            model.addAttribute("message", PromptMessageEnum.PHONE_NUMBER_REGISTERED.getValue());
             model.addAttribute("nameSession",name);
             model.addAttribute("identityCodeSession",identityCode);
             return "register";
@@ -61,5 +71,17 @@ public class LoginController {
             userService.createNewUser(user);
             return "login";
         }
+    }
+
+    @RequestMapping("/homepage")
+    public String toHomepage(){
+        return "homepage";
+    }
+
+    @RequestMapping("/logout")
+    public String logout(){
+        SecurityUtils.getSubject().logout();
+
+        return "login";
     }
 }

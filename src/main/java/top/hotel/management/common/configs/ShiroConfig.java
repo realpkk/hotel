@@ -76,6 +76,13 @@ public class ShiroConfig {
 
         Map<String,String> filterChainDefinitionMap = new HashMap<>();
 
+        filterChainDefinitionMap.put("/index","anon");
+
+        filterChainDefinitionMap.put("/login","anon");
+        filterChainDefinitionMap.put("/toRegister","anon");
+        filterChainDefinitionMap.put("/register","anon");
+        filterChainDefinitionMap.put("/static/**","anon");
+
         filterChainDefinitionMap.put("/**","anon");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

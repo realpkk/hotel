@@ -1,7 +1,7 @@
 package top.hotel.management.common.enums;
 
 public enum PromptMessageEnum {
-    PPE("手机号或密码错误"),PD("手机号已注册");
+    PHONE_PASSWORD_ERROR("手机号或密码错误"),PHONE_NUMBER_REGISTERED("手机号已注册"),CURRENT_TIME_ORDERED("当前时间段已被预订");
 
     String value;
 

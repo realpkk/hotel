@@ -12,7 +12,7 @@ import java.util.List;
 public interface MenuRepository extends AbstractRepository<Menu,Long> {
 
     @Query("select m from Role r join r.menuList m where r.id in :roleIdList")
-    List<Menu> findMenusByRoleId(@Param("roleIdList") List<Long> roleList);
+    List<Menu> findMenusByRoleIdIn(@Param("roleIdList") List<Long> roleIdList);
 
     List<Menu> findMenusByParentId(Long parentId);
 }
